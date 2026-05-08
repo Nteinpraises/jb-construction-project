@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as ShopRouteImport } from './routes/shop'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as OrderConfirmedRouteImport } from './routes/order-confirmed'
+import { Route as JbControl2026RouteImport } from './routes/jb-control-2026'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
@@ -37,6 +38,11 @@ const ServicesRoute = ServicesRouteImport.update({
 const OrderConfirmedRoute = OrderConfirmedRouteImport.update({
   id: '/order-confirmed',
   path: '/order-confirmed',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JbControl2026Route = JbControl2026RouteImport.update({
+  id: '/jb-control-2026',
+  path: '/jb-control-2026',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -102,6 +108,7 @@ export interface FileRoutesByFullPath {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/jb-control-2026': typeof JbControl2026Route
   '/order-confirmed': typeof OrderConfirmedRoute
   '/services': typeof ServicesRoute
   '/shop': typeof ShopRoute
@@ -117,6 +124,7 @@ export interface FileRoutesByTo {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/jb-control-2026': typeof JbControl2026Route
   '/order-confirmed': typeof OrderConfirmedRoute
   '/services': typeof ServicesRoute
   '/shop': typeof ShopRoute
@@ -134,6 +142,7 @@ export interface FileRoutesById {
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
+  '/jb-control-2026': typeof JbControl2026Route
   '/order-confirmed': typeof OrderConfirmedRoute
   '/services': typeof ServicesRoute
   '/shop': typeof ShopRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/jb-control-2026'
     | '/order-confirmed'
     | '/services'
     | '/shop'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/jb-control-2026'
     | '/order-confirmed'
     | '/services'
     | '/shop'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/cart'
     | '/checkout'
     | '/contact'
+    | '/jb-control-2026'
     | '/order-confirmed'
     | '/services'
     | '/shop'
@@ -200,6 +212,7 @@ export interface RootRouteChildren {
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
+  JbControl2026Route: typeof JbControl2026Route
   OrderConfirmedRoute: typeof OrderConfirmedRoute
   ServicesRoute: typeof ServicesRoute
   ShopRoute: typeof ShopRoute
@@ -227,6 +240,13 @@ declare module '@tanstack/react-router' {
       path: '/order-confirmed'
       fullPath: '/order-confirmed'
       preLoaderRoute: typeof OrderConfirmedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/jb-control-2026': {
+      id: '/jb-control-2026'
+      path: '/jb-control-2026'
+      fullPath: '/jb-control-2026'
+      preLoaderRoute: typeof JbControl2026RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -332,6 +352,7 @@ const rootRouteChildren: RootRouteChildren = {
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
+  JbControl2026Route: JbControl2026Route,
   OrderConfirmedRoute: OrderConfirmedRoute,
   ServicesRoute: ServicesRoute,
   ShopRoute: ShopRoute,
