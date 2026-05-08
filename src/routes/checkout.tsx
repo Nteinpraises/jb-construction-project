@@ -60,15 +60,30 @@ function Checkout() {
       const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
       if (itemsError) throw itemsError;
 
-      // WhatsApp notification link
-      const whatsappMsg = encodeURIComponent(
+      // Build message
+      const lines = items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n");
+      const summary =
         `New order from ${form.name} (${form.phone})\n` +
-          items.map((i) => `• ${i.quantity} × ${i.name}`).join("\n") +
-          `\nTotal: ${formatXAF(total)}\nDeliver to: ${form.address}`
-      );
+        (form.email ? `Email: ${form.email}\n` : "") +
+        `\n${lines}\n\nTotal: ${formatXAF(total)}\nDeliver to: ${form.address}` +
+        (form.notes ? `\nNotes: ${form.notes}` : "");
+
       cart.clear();
       toast.success("Order placed! We'll contact you shortly.");
-      window.open(`https://wa.me/237670713943?text=${whatsappMsg}`, "_blank");
+
+      // 1. WhatsApp owner
+      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(summary)}`, "_blank");
+
+      // 2. Email owner (opens default mail app with prefilled order details)
+      const mailSubject = encodeURIComponent(`New order #${order.id.slice(0, 8)} — ${form.name}`);
+      const mailBody = encodeURIComponent(summary);
+      // Use a hidden anchor so popup blockers don't kill it
+      setTimeout(() => {
+        const a = document.createElement("a");
+        a.href = `mailto:jbconstruction@gmail.com?subject=${mailSubject}&body=${mailBody}`;
+        a.click();
+      }, 400);
+
       navigate({ to: "/order-confirmed", search: { id: order.id } });
     } catch (err: any) {
       toast.error(err?.message ?? "Could not place order");
