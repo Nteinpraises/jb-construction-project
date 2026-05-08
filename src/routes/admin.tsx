@@ -2,15 +2,15 @@ import { createFileRoute, Link, Outlet, redirect, useNavigate, useRouterState } 
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { LayoutDashboard, Package, ShoppingBag, LogOut } from "lucide-react";
+import { LayoutDashboard, Package, ShoppingBag, LogOut, Newspaper } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
   component: AdminLayout,
   beforeLoad: async ({ location }) => {
-    if (location.pathname === "/admin/login") return;
+    if (location.pathname === "/jb-control-2026") return;
     const { data } = await supabase.auth.getSession();
-    if (!data.session) throw redirect({ to: "/admin/login" });
+    if (!data.session) throw redirect({ to: "/jb-control-2026" });
   },
 });
 
@@ -21,10 +21,10 @@ function AdminLayout() {
   const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
-    if (path === "/admin/login") return;
+    if (path === "/jb-control-2026") return;
     (async () => {
       const { data: sess } = await supabase.auth.getSession();
-      if (!sess.session) { navigate({ to: "/admin/login" }); return; }
+      if (!sess.session) { navigate({ to: "/jb-control-2026" }); return; }
       setEmail(sess.session.user.email ?? "");
       const { data, error } = await supabase
         .from("user_roles")
@@ -37,7 +37,7 @@ function AdminLayout() {
     })();
   }, [path, navigate]);
 
-  if (path === "/admin/login") return <Outlet />;
+  if (path === "/jb-control-2026") return <Outlet />;
 
   if (isAdmin === null) {
     return <div className="container mx-auto py-20 text-center text-muted-foreground">Loading admin...</div>;
@@ -54,7 +54,7 @@ function AdminLayout() {
         <p className="mt-2 text-xs text-muted-foreground">
           (First-time setup: open the backend, add a row to <span className="font-mono">user_roles</span> with your user_id and role <span className="font-mono">admin</span>.)
         </p>
-        <Button onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/admin/login" }); }} variant="outline" className="mt-6">
+        <Button onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/jb-control-2026" }); }} variant="outline" className="mt-6">
           Sign out
         </Button>
       </div>
@@ -65,6 +65,7 @@ function AdminLayout() {
     { to: "/admin", label: "Dashboard", icon: LayoutDashboard },
     { to: "/admin/products", label: "Products", icon: Package },
     { to: "/admin/orders", label: "Orders", icon: ShoppingBag },
+    { to: "/admin/posts", label: "Blog", icon: Newspaper },
   ];
 
   return (
@@ -74,7 +75,7 @@ function AdminLayout() {
           <h1 className="font-display text-3xl font-bold">Admin</h1>
           <p className="text-sm text-muted-foreground">{email}</p>
         </div>
-        <Button variant="outline" size="sm" onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/admin/login" }); }}>
+        <Button variant="outline" size="sm" onClick={async () => { await supabase.auth.signOut(); navigate({ to: "/jb-control-2026" }); }}>
           <LogOut className="h-4 w-4 mr-2" /> Sign out
         </Button>
       </div>
