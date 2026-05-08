@@ -16,6 +16,7 @@ export function SiteFooter() {
           <ul className="space-y-2 text-sm text-primary-foreground/80">
             <li><Link to="/shop" className="hover:text-accent">Shop</Link></li>
             <li><Link to="/services" className="hover:text-accent">Services</Link></li>
+            <li><Link to="/blog" className="hover:text-accent">News & Updates</Link></li>
             <li><Link to="/about" className="hover:text-accent">About</Link></li>
             <li><Link to="/contact" className="hover:text-accent">Contact</Link></li>
           </ul>
@@ -24,14 +25,18 @@ export function SiteFooter() {
           <div className="font-semibold mb-3 text-sm uppercase tracking-wider text-secondary">Contact</div>
           <ul className="space-y-2 text-sm text-primary-foreground/80">
             <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> +237 670 713 943</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> nkembohjuniorbrown@gmail.com</li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> jbconstruction@gmail.com</li>
             <li className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Bamenda, Cameroon</li>
             <li className="flex items-center gap-2"><Facebook className="h-4 w-4" /> JB Construction</li>
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 py-5 text-center text-xs text-primary-foreground/60">
-        © {new Date().getFullYear()} JB Construction. Quality work is our priority.
+      <div className="border-t border-white/10 py-5 text-center text-xs text-primary-foreground/60 px-4">
+        © {new Date().getFullYear()} JB Construction. Quality work is our priority. •{" "}
+        Designed & developed by{" "}
+        <a href="https://nteinpraises.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gradient-gold font-semibold hover:underline">
+          Ntein Praises
+        </a>
       </div>
     </footer>
   );

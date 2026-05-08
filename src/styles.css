@@ -34,8 +34,8 @@
   --color-gold: var(--gold);
   --color-gold-foreground: var(--gold-foreground);
 
-  --font-display: "Playfair Display", Georgia, serif;
-  --font-sans: "Inter", system-ui, sans-serif;
+  --font-display: "Manrope", system-ui, sans-serif;
+  --font-sans: "Manrope", system-ui, sans-serif;
 
   --shadow-elegant: 0 20px 60px -20px color-mix(in oklab, var(--primary) 40%, transparent);
   --shadow-glow: 0 0 80px -10px color-mix(in oklab, var(--accent) 60%, transparent);
@@ -99,7 +99,7 @@
 }
 
 @layer base {
-  @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap");
+  @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
 
   * { border-color: var(--color-border); }
   body {
@@ -107,7 +107,7 @@
     color: var(--color-foreground);
     font-family: var(--font-sans);
   }
-  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.02em; }
+  h1, h2, h3, h4 { font-family: var(--font-display); letter-spacing: -0.025em; font-weight: 700; }
 }
 
 @utility hero-gradient {
