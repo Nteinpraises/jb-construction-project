@@ -89,6 +89,30 @@ function PostForm({ initial, onCancel, onSave }: any) {
     cover_image_url: initial.cover_image_url ?? "",
     is_published: initial.is_published ?? true,
   });
+  const [uploading, setUploading] = useState(false);
+
+  async function handleUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploading(true);
+    try {
+      const ext = file.name.split(".").pop();
+      const path = `posts/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+      const { error } = await supabase.storage.from("blog-images").upload(path, file, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+      if (error) throw error;
+      const { data } = supabase.storage.from("blog-images").getPublicUrl(path);
+      setForm((f) => ({ ...f, cover_image_url: data.publicUrl }));
+      toast.success("Image uploaded");
+    } catch (err: any) {
+      toast.error(err?.message ?? "Upload failed");
+    } finally {
+      setUploading(false);
+    }
+  }
+
   return (
     <form
       onSubmit={(e) => { e.preventDefault(); onSave(form); }}
@@ -102,7 +126,27 @@ function PostForm({ initial, onCancel, onSave }: any) {
         <div><Label>Title</Label><Input required value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} /></div>
         <div><Label>Slug (optional)</Label><Input value={form.slug} onChange={(e) => setForm({ ...form, slug: e.target.value })} placeholder="auto-generated" /></div>
       </div>
-      <div><Label>Cover image URL (optional)</Label><Input value={form.cover_image_url} onChange={(e) => setForm({ ...form, cover_image_url: e.target.value })} placeholder="https://..." /></div>
+      <div>
+        <Label>Cover image</Label>
+        {form.cover_image_url && (
+          <div className="mt-2 mb-3 relative rounded-lg overflow-hidden border border-border w-full max-w-sm">
+            <img src={form.cover_image_url} alt="Cover preview" className="w-full h-40 object-cover" />
+            <Button type="button" size="icon" variant="destructive" className="absolute top-2 right-2 h-7 w-7" onClick={() => setForm({ ...form, cover_image_url: "" })}>
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        )}
+        <div className="flex items-center gap-2">
+          <label className="inline-flex">
+            <input type="file" accept="image/*" className="hidden" onChange={handleUpload} disabled={uploading} />
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background hover:bg-muted cursor-pointer text-sm">
+              {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
+              {uploading ? "Uploading..." : "Upload image"}
+            </span>
+          </label>
+          <Input value={form.cover_image_url} onChange={(e) => setForm({ ...form, cover_image_url: e.target.value })} placeholder="or paste image URL" className="flex-1" />
+        </div>
+      </div>
       <div><Label>Excerpt</Label><Textarea value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} placeholder="Short summary shown on the blog list" /></div>
       <div><Label>Content</Label><Textarea required rows={10} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} /></div>
       <label className="flex items-center gap-2 text-sm">
