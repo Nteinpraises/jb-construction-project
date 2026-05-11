@@ -24,15 +24,15 @@ export function SiteFooter() {
         <div>
           <div className="font-semibold mb-3 text-sm uppercase tracking-wider text-secondary">Contact</div>
           <ul className="space-y-2 text-sm text-primary-foreground/80">
-            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /> +237 670 713 943</li>
-            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /> jbconstruction@gmail.com</li>
-            <li className="flex items-center gap-2"><MapPin className="h-4 w-4" /> Bamenda, Cameroon</li>
-            <li className="flex items-center gap-2"><Facebook className="h-4 w-4" /> JB Construction</li>
+            <li className="flex items-center gap-2"><Phone className="h-4 w-4" /><span>+237 670 713 943</span></li>
+            <li className="flex items-center gap-2"><Mail className="h-4 w-4" /><span>jbconstruction@gmail.com</span></li>
+            <li className="flex items-center gap-2"><MapPin className="h-4 w-4" /><span>Bamenda, Cameroon</span></li>
+            <li className="flex items-center gap-2"><Facebook className="h-4 w-4" /><span>JB Construction</span></li>
           </ul>
         </div>
       </div>
       <div className="border-t border-white/10 py-5 text-center text-xs text-primary-foreground/60 px-4">
-        © {new Date().getFullYear()} JB Construction. Quality work is our priority. •{" "}
+        © 2026 JB Construction. Quality work is our priority. •{" "}
         Designed & developed by{" "}
         <a href="https://nteinpraises.vercel.app" target="_blank" rel="noopener noreferrer" className="text-gradient-gold font-semibold hover:underline">
           Ntein Praises
