@@ -60,14 +60,6 @@ function Checkout() {
       const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
       if (itemsError) throw itemsError;
 
-      // Build message
-      const lines = items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n");
-      const summary =
-        `New order from ${form.name} (${form.phone})\n` +
-        (form.email ? `Email: ${form.email}\n` : "") +
-        `\n${lines}\n\nTotal: ${formatXAF(total)}\nDeliver to: ${form.address}` +
-        (form.notes ? `\nNotes: ${form.notes}` : "");
-
       cart.clear();
       toast.success("Order placed! We'll contact you shortly.");
 
