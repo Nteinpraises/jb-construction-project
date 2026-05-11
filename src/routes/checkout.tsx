@@ -57,7 +57,7 @@ function Checkout() {
 
     const sendWhatsApp = (msg: string) => {
       const text = encodeURIComponent(msg);
-      const url = `https://wa.me/${ADMIN_WHATSAPP}?text=${text}`;
+      const url = `whatsapp://send?phone=${ADMIN_WHATSAPP}&text=${text}`;
       navigator.clipboard?.writeText(msg).catch(() => undefined);
       window.open(url, "_blank", "noopener,noreferrer");
     };
