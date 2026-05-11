@@ -130,7 +130,7 @@ function Checkout() {
           <Button type="submit" disabled={loading} size="lg" className="w-full mt-4 bg-accent hover:bg-accent/90 text-accent-foreground">
             {loading ? "Placing..." : "Place order"}
           </Button>
-          <p className="text-xs text-muted-foreground text-center">You'll be connected via WhatsApp to confirm payment & delivery.</p>
+          <p className="text-xs text-muted-foreground text-center">Your order details will be sent directly to our team on WhatsApp to confirm payment & delivery.</p>
         </div>
       </form>
     </div>
