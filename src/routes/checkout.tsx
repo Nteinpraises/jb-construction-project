@@ -48,8 +48,15 @@ function Checkout() {
       items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n") +
       `\n━━━━━━━━━━━━━━━━━\n*💰 TOTAL: ${formatXAF(total)}*`;
 
-    const sendWhatsApp = (msg: string) =>
-      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(msg)}`, "_blank");
+    const sendWhatsApp = (msg: string) => {
+      const phone = "237670713943";
+      const text = encodeURIComponent(msg);
+      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+      const url = isMobile
+        ? `https://wa.me/${phone}?text=${text}`
+        : `https://web.whatsapp.com/send?phone=${phone}&text=${text}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    };
 
     try {
       const { data: order, error } = await supabase
