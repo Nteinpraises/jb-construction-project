@@ -34,6 +34,23 @@ function Checkout() {
       return;
     }
     setLoading(true);
+
+    // Build WhatsApp message once — sent regardless of DB outcome
+    const buildMessage = (orderId?: string) =>
+      `*🛒 NEW ORDER${orderId ? ` #${orderId.slice(0, 8).toUpperCase()}` : ""}*\n` +
+      `━━━━━━━━━━━━━━━━━\n` +
+      `*👤 Customer:* ${form.name}\n` +
+      `*📱 Phone:* ${form.phone}\n` +
+      (form.email ? `*✉️ Email:* ${form.email}\n` : "") +
+      `*📍 Address:* ${form.address}\n` +
+      (form.notes ? `*📝 Notes:* ${form.notes}\n` : "") +
+      `\n*📦 ITEMS ORDERED:*\n` +
+      items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n") +
+      `\n━━━━━━━━━━━━━━━━━\n*💰 TOTAL: ${formatXAF(total)}*`;
+
+    const sendWhatsApp = (msg: string) =>
+      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(msg)}`, "_blank");
+
     try {
       const { data: order, error } = await supabase
         .from("orders")
@@ -48,7 +65,7 @@ function Checkout() {
         })
         .select()
         .single();
-      if (error || !order) throw error;
+      if (error || !order) throw error ?? new Error("Order failed");
 
       const orderItems = items.map((i) => ({
         order_id: order.id,
@@ -57,30 +74,18 @@ function Checkout() {
         unit_price: i.price,
         quantity: i.quantity,
       }));
-      const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
-      if (itemsError) throw itemsError;
+      await supabase.from("order_items").insert(orderItems);
 
+      sendWhatsApp(buildMessage(order.id));
       cart.clear();
-      toast.success("Order placed! We'll contact you shortly.");
-
-      // Send full order details directly to admin's WhatsApp
-      const waMessage =
-        `*NEW ORDER #${order.id.slice(0, 8).toUpperCase()}*\n` +
-        `━━━━━━━━━━━━━━━━━\n` +
-        `*Customer:* ${form.name}\n` +
-        `*Phone:* ${form.phone}\n` +
-        (form.email ? `*Email:* ${form.email}\n` : "") +
-        `*Address:* ${form.address}\n` +
-        (form.notes ? `*Notes:* ${form.notes}\n` : "") +
-        `\n*ITEMS ORDERED:*\n` +
-        items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n") +
-        `\n━━━━━━━━━━━━━━━━━\n*TOTAL: ${formatXAF(total)}*`;
-
-      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(waMessage)}`, "_blank");
-
+      toast.success("Order placed! Confirm with us on WhatsApp.");
       navigate({ to: "/order-confirmed", search: { id: order.id } });
     } catch (err: any) {
-      toast.error(err?.message ?? "Could not place order");
+      // Fallback: still send the order to admin's WhatsApp
+      sendWhatsApp(buildMessage());
+      cart.clear();
+      toast.success("Order sent to our team on WhatsApp!");
+      navigate({ to: "/" });
     } finally {
       setLoading(false);
     }
