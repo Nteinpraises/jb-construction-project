@@ -8,6 +8,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 
+const ADMIN_WHATSAPP = "237670713943";
+
 export const Route = createFileRoute("/checkout")({
   component: Checkout,
   head: () => ({ meta: [{ title: "Checkout — JB Construction" }] }),
@@ -45,16 +47,18 @@ function Checkout() {
       `*📍 Address:* ${form.address}\n` +
       (form.notes ? `*📝 Notes:* ${form.notes}\n` : "") +
       `\n*📦 ITEMS ORDERED:*\n` +
-      items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n") +
+      items
+        .map(
+          (i, index) =>
+            `${index + 1}. ${i.name}\n   Qty: ${i.quantity}\n   Unit: ${formatXAF(i.price)}\n   Line total: ${formatXAF(i.price * i.quantity)}`,
+        )
+        .join("\n\n") +
       `\n━━━━━━━━━━━━━━━━━\n*💰 TOTAL: ${formatXAF(total)}*`;
 
     const sendWhatsApp = (msg: string) => {
-      const phone = "237670713943";
       const text = encodeURIComponent(msg);
-      const isMobile = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-      const url = isMobile
-        ? `https://wa.me/${phone}?text=${text}`
-        : `https://web.whatsapp.com/send?phone=${phone}&text=${text}`;
+      const url = `whatsapp://send?phone=${ADMIN_WHATSAPP}&text=${text}`;
+      navigator.clipboard?.writeText(msg).catch(() => undefined);
       window.open(url, "_blank", "noopener,noreferrer");
     };
 
