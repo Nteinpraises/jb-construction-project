@@ -73,6 +73,7 @@ function Blog() {
           ))
         )}
       </div>
+      </div>
     </div>
   );
 }
