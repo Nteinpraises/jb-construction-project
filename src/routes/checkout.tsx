@@ -60,29 +60,23 @@ function Checkout() {
       const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
       if (itemsError) throw itemsError;
 
-      // Build message
-      const lines = items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n");
-      const summary =
-        `New order from ${form.name} (${form.phone})\n` +
-        (form.email ? `Email: ${form.email}\n` : "") +
-        `\n${lines}\n\nTotal: ${formatXAF(total)}\nDeliver to: ${form.address}` +
-        (form.notes ? `\nNotes: ${form.notes}` : "");
-
       cart.clear();
       toast.success("Order placed! We'll contact you shortly.");
 
-      // 1. WhatsApp owner
-      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(summary)}`, "_blank");
+      // Send full order details directly to admin's WhatsApp
+      const waMessage =
+        `*NEW ORDER #${order.id.slice(0, 8).toUpperCase()}*\n` +
+        `━━━━━━━━━━━━━━━━━\n` +
+        `*Customer:* ${form.name}\n` +
+        `*Phone:* ${form.phone}\n` +
+        (form.email ? `*Email:* ${form.email}\n` : "") +
+        `*Address:* ${form.address}\n` +
+        (form.notes ? `*Notes:* ${form.notes}\n` : "") +
+        `\n*ITEMS ORDERED:*\n` +
+        items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n") +
+        `\n━━━━━━━━━━━━━━━━━\n*TOTAL: ${formatXAF(total)}*`;
 
-      // 2. Email owner (opens default mail app with prefilled order details)
-      const mailSubject = encodeURIComponent(`New order #${order.id.slice(0, 8)} — ${form.name}`);
-      const mailBody = encodeURIComponent(summary);
-      // Use a hidden anchor so popup blockers don't kill it
-      setTimeout(() => {
-        const a = document.createElement("a");
-        a.href = `mailto:jbconstruction@gmail.com?subject=${mailSubject}&body=${mailBody}`;
-        a.click();
-      }, 400);
+      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(waMessage)}`, "_blank");
 
       navigate({ to: "/order-confirmed", search: { id: order.id } });
     } catch (err: any) {
@@ -136,7 +130,7 @@ function Checkout() {
           <Button type="submit" disabled={loading} size="lg" className="w-full mt-4 bg-accent hover:bg-accent/90 text-accent-foreground">
             {loading ? "Placing..." : "Place order"}
           </Button>
-          <p className="text-xs text-muted-foreground text-center">You'll be connected via WhatsApp to confirm payment & delivery.</p>
+          <p className="text-xs text-muted-foreground text-center">Your order details will be sent directly to our team on WhatsApp to confirm payment & delivery.</p>
         </div>
       </form>
     </div>

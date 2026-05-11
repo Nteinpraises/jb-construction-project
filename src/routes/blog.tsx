@@ -28,12 +28,26 @@ function Blog() {
   });
 
   return (
-    <div className="container mx-auto px-4 py-12">
-      <span className="text-xs uppercase tracking-widest text-accent font-semibold">News & updates</span>
-      <h1 className="mt-2 font-display text-4xl md:text-5xl font-bold">From the construction floor</h1>
-      <p className="mt-2 text-muted-foreground">Project updates, market news and tips from our team.</p>
+    <div>
+      {/* Hero */}
+      <section className="relative overflow-hidden hero-gradient text-primary-foreground">
+        <div className="absolute inset-0 opacity-20 bg-[radial-gradient(circle_at_20%_20%,white,transparent_40%),radial-gradient(circle_at_80%_60%,white,transparent_35%)]" />
+        <div className="container mx-auto px-4 py-20 md:py-28 relative">
+          <span className="inline-block text-xs uppercase tracking-[0.3em] text-gradient-gold font-semibold">News & updates</span>
+          <h1 className="mt-4 font-display text-4xl md:text-6xl font-bold max-w-3xl leading-tight">
+            Stories from the <span className="text-gradient-gold">construction floor</span>
+          </h1>
+          <p className="mt-5 text-lg md:text-xl text-primary-foreground/80 max-w-2xl">
+            Project updates, market insights, and behind-the-scenes news from the JB Construction team in Bamenda and beyond.
+          </p>
+        </div>
+      </section>
 
-      <div className="mt-10 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="container mx-auto px-4 py-12">
+        <h2 className="font-display text-2xl md:text-3xl font-bold">Latest posts</h2>
+        <p className="mt-1 text-muted-foreground">Fresh updates from our team.</p>
+
+        <div className="mt-8 grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {isLoading ? (
           <p className="text-muted-foreground">Loading...</p>
         ) : posts.length === 0 ? (
@@ -58,6 +72,7 @@ function Blog() {
             </Link>
           ))
         )}
+      </div>
       </div>
     </div>
   );
