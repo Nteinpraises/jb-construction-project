@@ -71,18 +71,20 @@ function Checkout() {
       cart.clear();
       toast.success("Order placed! We'll contact you shortly.");
 
-      // 1. WhatsApp owner
-      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(summary)}`, "_blank");
+      // Send full order details directly to admin's WhatsApp
+      const waMessage =
+        `*NEW ORDER #${order.id.slice(0, 8).toUpperCase()}*\n` +
+        `━━━━━━━━━━━━━━━━━\n` +
+        `*Customer:* ${form.name}\n` +
+        `*Phone:* ${form.phone}\n` +
+        (form.email ? `*Email:* ${form.email}\n` : "") +
+        `*Address:* ${form.address}\n` +
+        (form.notes ? `*Notes:* ${form.notes}\n` : "") +
+        `\n*ITEMS ORDERED:*\n` +
+        items.map((i) => `• ${i.quantity} × ${i.name} — ${formatXAF(i.price * i.quantity)}`).join("\n") +
+        `\n━━━━━━━━━━━━━━━━━\n*TOTAL: ${formatXAF(total)}*`;
 
-      // 2. Email owner (opens default mail app with prefilled order details)
-      const mailSubject = encodeURIComponent(`New order #${order.id.slice(0, 8)} — ${form.name}`);
-      const mailBody = encodeURIComponent(summary);
-      // Use a hidden anchor so popup blockers don't kill it
-      setTimeout(() => {
-        const a = document.createElement("a");
-        a.href = `mailto:jbconstruction@gmail.com?subject=${mailSubject}&body=${mailBody}`;
-        a.click();
-      }, 400);
+      window.open(`https://wa.me/237670713943?text=${encodeURIComponent(waMessage)}`, "_blank");
 
       navigate({ to: "/order-confirmed", search: { id: order.id } });
     } catch (err: any) {
